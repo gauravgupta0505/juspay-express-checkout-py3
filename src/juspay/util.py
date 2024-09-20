@@ -1,4 +1,5 @@
 from . import config
+from typing import Optional
 import requests
 import juspay
 from .JuspayException import *
@@ -20,7 +21,7 @@ def get_arg(kwargs, param):
         return None
 
 
-def request(method, url, parameters):
+def request(method, url, parameters, timeout: Optional[float]):
     try:
         if juspay.environment == 'production':
             server = 'https://api.juspay.in'
@@ -34,9 +35,9 @@ def request(method, url, parameters):
         if juspay.merchant_id is not None:
             header['x-merchantid'] = juspay.merchant_id
         if method.upper() == 'GET':
-            response = requests.get(server + url, headers=header, params=parameters, auth=(juspay.api_key, ''))
+            response = requests.get(server + url, headers=header, params=parameters, auth=(juspay.api_key, ''), timeout=timeout)
         else:
-            response = requests.post(server + url, headers=header, data=parameters, auth=(juspay.api_key, ''))
+            response = requests.post(server + url, headers=header, data=parameters, auth=(juspay.api_key, ''), timeout=timeout)
 
         # Report error if response is not 200 ("OK")
         if 200 <= response.status_code < 300:

@@ -15,6 +15,7 @@ class VPA:
         if client_auth_token is not None:
             customer_id = util.get_arg(kwargs, 'customer_id')
             order_id = util.get_arg(kwargs, 'order_id')
+            timeout = util.get_arg(kwargs, 'timeout')
 
             if customer_id is None or order_id is None:
                 raise InvalidArgumentException(
@@ -27,5 +28,5 @@ class VPA:
 
         method = 'POST'
         url = '/v2/upi/verify-vpa'
-        response = util.request(method, url, params).json()
+        response = util.request(method, url, params, timeout).json()
         return response
